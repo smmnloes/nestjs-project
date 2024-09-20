@@ -4,17 +4,20 @@ import { PassportModule } from '@nestjs/passport'
 import { JwtStrategy } from './jwt.strategy'
 import { AuthService } from './auth.service'
 import { AuthController } from './auth.controller'
+import { DatabaseModule } from '../data/database.module'
 
 @Module({
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: 'yourSecretKey', // Use a secure key in production
+      secret: 'yourSecretKey',
       signOptions: { expiresIn: '60m' }
-    })
+    }),
+    DatabaseModule
   ],
   providers: [AuthService, JwtStrategy],
-  exports: [AuthService],
+  exports: [],
   controllers: [AuthController]
 })
-export class AuthModule {}
+export class AuthModule {
+}
