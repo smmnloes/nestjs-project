@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, HttpException, HttpStatus, Post } from '@nestjs/common'
-import { AuthService, LoginResponse } from './auth.service'
+import { AuthService } from './auth.service'
 
 
 export class LoginCredentials {
