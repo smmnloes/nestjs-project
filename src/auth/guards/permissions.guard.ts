@@ -1,6 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { PERMISSIONS_KEY } from '../permissions/permissions.decorator'
+import { Permission } from '../permissions/permission'
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
@@ -8,7 +9,7 @@ export class PermissionsGuard implements CanActivate {
   }
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.getAllAndOverride<Permissions[]>(PERMISSIONS_KEY, [
+    const requiredRoles = this.reflector.getAllAndOverride<Permission[]>(PERMISSIONS_KEY, [
       context.getHandler(),
       context.getClass()
     ])
