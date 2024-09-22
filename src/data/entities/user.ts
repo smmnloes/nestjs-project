@@ -1,7 +1,8 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Permission } from '../../auth/permissions/permission'
 
 @Entity()
-export class UserCredentials {
+export class User {
   @PrimaryGeneratedColumn()
   id: number
 
@@ -10,4 +11,7 @@ export class UserCredentials {
 
   @Column()
   password_hashed: string
+
+  @Column('text', { array: true })
+  permissions: string[]
 }

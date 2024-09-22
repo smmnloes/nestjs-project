@@ -1,33 +1,33 @@
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { LoginCredentials } from './auth.controller'
-import { UserCredentials } from '../data/entities/user-credentials'
+import { User } from '../data/entities/user'
 import { Repository } from 'typeorm'
 import { genSalt, hash, compare } from 'bcrypt'
+import { Permission } from './permissions/permission'
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtService: JwtService, private readonly userCredentialsRepository: Repository<UserCredentials>) {
+  constructor(private readonly jwtService: JwtService, private readonly userCredentialsRepository: Repository<User>) {
   }
 
-  async validateUser(username: string, password: string): Promise<any> {
-    const storedCredentials = await this.userCredentialsRepository.findBy({ username: username })
+  async validateUser(usernameInput: string, passwordInput: string): Promise<UserPayload> {
+    const storedCredentials = await this.userCredentialsRepository.findBy({ username: usernameInput })
     if (storedCredentials === null || storedCredentials.length !== 1) {
       throw new UnauthorizedException()
     }
-    const matchedCredentials = storedCredentials[0]
-    const compareResult = await compare(password, matchedCredentials.password_hashed)
+    const {password_hashed, username, permissions} = storedCredentials[0]
+    const compareResult = await compare(passwordInput, password_hashed)
     if (compareResult === true) {
-      return { username }
+      return { username,  permissions: permissions as Permission[]}
     } else {
       throw new UnauthorizedException()
     }
   }
 
-  async login(user: any) {
-    const payload = { username: user.username, sub: user.userId }
+  async login(userPayload: UserPayload) {
     return {
-      access_token: this.jwtService.sign(payload)
+      access_token: this.jwtService.sign(userPayload)
     }
   }
 
@@ -37,11 +37,11 @@ export class AuthService {
     }
     const salt = await genSalt(10)
     const password_hashed = await hash(password, salt)
-    await this.userCredentialsRepository.insert({ username, password_hashed })
+    await this.userCredentialsRepository.insert({ username, password_hashed, permissions: [Permission.VIEW_PROFILE] })
   }
 }
 
-export type LoginResponse = {
-  login_successful: boolean
-  access_token?: string
+type UserPayload = {
+  username: string,
+  permissions: Permission[]
 }

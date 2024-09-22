@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm'
-import { UserCredentials } from './entities/user-credentials'
+import { User } from './entities/user'
 import { Provider } from '@nestjs/common'
 
 export const datasourceProvider: Provider =
@@ -13,7 +13,7 @@ export const datasourceProvider: Provider =
         username: 'myuser',
         password: 'mypassword',
         database: 'mydatabase',
-        entities: [UserCredentials],
+        entities: [User],
         synchronize: true
       })
 
