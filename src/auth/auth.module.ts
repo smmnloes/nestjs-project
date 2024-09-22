@@ -5,12 +5,13 @@ import { JwtStrategy } from './jwt.strategy'
 import { AuthService } from './auth.service'
 import { AuthController } from './auth.controller'
 import { DatabaseModule } from '../data/database.module'
+import { APP_SECRET } from './secrets'
 
 @Module({
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: 'yourSecretKey',
+      secret: APP_SECRET,
       signOptions: { expiresIn: '60m' }
     }),
     DatabaseModule

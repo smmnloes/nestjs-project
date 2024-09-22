@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { LoginCredentials } from './auth.controller'
 import { UserCredentials } from '../data/entities/user-credentials'
@@ -10,25 +10,29 @@ export class AuthService {
   constructor(private readonly jwtService: JwtService, private readonly userCredentialsRepository: Repository<UserCredentials>) {
   }
 
-  async login(loginCredentials: LoginCredentials): Promise<LoginResponse> {
-    const storedCredentials = await this.userCredentialsRepository.findBy({ username: loginCredentials.username })
+  async validateUser(username: string, password: string): Promise<any> {
+    const storedCredentials = await this.userCredentialsRepository.findBy({ username: username })
     if (storedCredentials === null || storedCredentials.length !== 1) {
-      return { login_successful: false }
+      throw new UnauthorizedException()
     }
     const matchedCredentials = storedCredentials[0]
-    const compareResult = await compare(loginCredentials.password, matchedCredentials.password_hashed)
+    const compareResult = await compare(password, matchedCredentials.password_hashed)
     if (compareResult === true) {
-      return {
-        login_successful: true,
-        access_token: this.jwtService.sign({ sub: loginCredentials.username })
-      }
+      return { username }
     } else {
-      return { login_successful: false }
+      throw new UnauthorizedException()
+    }
+  }
+
+  async login(user: any) {
+    const payload = { username: user.username, sub: user.userId }
+    return {
+      access_token: this.jwtService.sign(payload)
     }
   }
 
   async register({ username, password }: LoginCredentials): Promise<void> {
-    if (await this.userCredentialsRepository.exists({where: {username}})) {
+    if (await this.userCredentialsRepository.exists({ where: { username } })) {
       throw new HttpException('Username already exists', HttpStatus.CONFLICT)
     }
     const salt = await genSalt(10)
