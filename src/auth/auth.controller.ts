@@ -1,7 +1,7 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Request, UseGuards } from '@nestjs/common'
-import { AuthService } from './auth.service'
-import { LocalAuthGuard } from './guards/local.guard'
-
+import {Body, Controller, HttpCode, HttpStatus, Post, Request, Response, UseGuards} from '@nestjs/common'
+import {AuthService} from './auth.service'
+import {LocalAuthGuard} from './guards/local.guard'
+import {Response as ExpressResponse} from 'express'
 
 export class LoginCredentials {
   readonly username: string
@@ -17,8 +17,10 @@ export class AuthController {
   @Post('login')
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
-  async login(@Request() req: any) {
-    return this.authService.login(req.user)
+  async login(@Request() req: any, @Response() res: ExpressResponse) {
+    const jwt = await this.authService.login(req.user)
+    res.cookie('jwt', jwt, {httpOnly: true, secure: true})
+    res.send({message: 'Login successful'}).status(200)
   }
 
   @Post('register')

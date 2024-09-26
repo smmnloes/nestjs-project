@@ -18,3 +18,8 @@ Content-Type: application/json
   "username": "userwithpermission",
   "password": "mypassword"
 }
+
+###
+GET http://localhost:3000/profile
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1heCIsInBlcm1pc3Npb25zIjpbInZpZXdfcHJvZmlsZSJdLCJpZCI6MSwiaWF0IjoxNzI3MjEyNDI3LCJleHAiOjE3MjcyMTYwMjd9.hWSpjwaBAyGWD7AUnvagFQoVKrDOgXo5frGkL9EvDFQ

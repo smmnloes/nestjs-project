@@ -1,5 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
-import { Permission } from '../../auth/permissions/permission'
+import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm'
 
 @Entity()
 export class User {
