@@ -16,7 +16,7 @@ export class PermissionsGuard implements CanActivate {
     if (!requiredRoles) {
       return true
     }
-    const { user } = context.switchToHttp().getRequest()
+    const {user} = context.switchToHttp().getRequest()
     // Todo: Controller that requires ALL roles
     return requiredRoles.some((role) => user.roles?.includes(role))
   }

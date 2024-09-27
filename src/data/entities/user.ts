@@ -1,4 +1,4 @@
-import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm'
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity()
 export class User {
@@ -11,6 +11,6 @@ export class User {
   @Column()
   password_hashed: string
 
-  @Column('text', { array: true })
+  @Column('text', {array: true})
   permissions: string[]
 }

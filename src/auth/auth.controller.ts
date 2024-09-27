@@ -1,7 +1,7 @@
-import {Body, Controller, HttpCode, HttpStatus, Post, Request, Response, UseGuards} from '@nestjs/common'
-import {AuthService} from './auth.service'
-import {LocalAuthGuard} from './guards/local.guard'
-import {Response as ExpressResponse} from 'express'
+import { Body, Controller, HttpCode, HttpStatus, Post, Request, Response, UseGuards } from '@nestjs/common'
+import { AuthService } from './auth.service'
+import { LocalAuthGuard } from './guards/local.guard'
+import { Response as ExpressResponse } from 'express'
 
 export class LoginCredentials {
   readonly username: string
